@@ -1,0 +1,72 @@
+/* Pregustator design tokens, hand-ported from the design system's tokens.json.
+   Single dark "Moss" theme by design: do not add a light theme without a new brief. */
+:root {
+  color-scheme: dark;
+
+  /* Color */
+  --surface: #1b2a16;
+  --surface-raised: #2b3f24;
+  --surface-cupboard: #141f10;
+  --ink: #f7f0da;
+  --ink-muted: #cdd6b4;
+  --on-light: #1f1408;
+  --label-paper: #f7f0da;
+  --amber: #f4b24a;
+  --status-ban: #ffa48c;
+  --status-limit: var(--amber);
+  --status-ok: #a6d8ea;
+  --focus: var(--status-ok);
+  --wood: #6b4226;
+  --wood-highlight: #8e5f3a;
+  --brass: #d0a850;
+  --brass-shadow: #5a3a1f;
+  --lamp-bulb: #ffe9b0;
+  --lamp-glow: rgba(255, 205, 120, 0.46);
+  --glass: rgba(247, 240, 218, 0.14);
+  --gus-cheek: #c8641f;
+  --box-rose: #e8a0b4;
+  --box-rose-flap: #c97f94;
+  --box-teal: #63c2ae;
+  --box-teal-flap: #46a08d;
+  --box-lilac: #b7a6e6;
+  --box-lilac-flap: #9483c6;
+  --box-apple: #a9cf63;
+  --box-apple-flap: #8ab045;
+  --fill-white: #f4f2ea;
+  --fill-red: #d8433a;
+  --fill-butter: #e8d27a;
+  --fill-sky: #9fc4e8;
+  --fill-sage: #a8d08d;
+
+  /* Type families (the --font-* source variables come from next/font in layout.tsx) */
+  --font-display: var(--font-gloock), Georgia, serif;
+  --font-body: var(--font-figtree), "Segoe UI", system-ui, sans-serif;
+  --font-voice: var(--font-grandstander), "Trebuchet MS", sans-serif;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 36px;
+
+  /* Radius */
+  --radius-box: 3px;
+  --radius-cupboard: 10px;
+  --radius-control: 12px;
+  --radius-bubble: 20px;
+  --radius-pill: 22px;
+  --radius-jar: 36px;
+  --radius-device: 28px;
+
+  /* Size */
+  --touch-min: 44px;
+  --container-phone: 78px;
+  --container-desktop: 130px;
+  --gus-phone: 46px;
+  --gus-desktop: 76px;
+  --frame-cupboard: 14px;
+}

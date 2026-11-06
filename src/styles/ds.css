@@ -1,0 +1,118 @@
+/* Design-system component styles, ported from the design system's bundle.css.
+   Changes from the original: no @import (fonts come from next/font), global motion
+   switch via <html data-motion>, and the phone cupboard can scroll sideways. */
+
+.pg-press { transition: transform 0.14s ease; }
+.pg-press:active { transform: translateY(2px); }
+
+/* Button */
+.pg-btn { min-height: var(--touch-min); padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); border-radius: var(--radius-control); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; border: 0; text-decoration: none; }
+.pg-btn--primary { background: var(--amber); color: var(--on-light); }
+.pg-btn--secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--ink-muted); font-weight: 600; }
+.pg-btn--inverse { background: var(--ink); color: var(--surface); }
+.pg-btn--pill { border-radius: var(--radius-pill); }
+.pg-btn--lg { font-size: 17px; padding: 0 24px; min-height: 52px; }
+.pg-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Status */
+.pg-status { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 700; }
+.pg-status--ban { color: var(--status-ban); }
+.pg-status--limit { color: var(--status-limit); }
+.pg-status--ok { color: var(--status-ok); }
+
+/* Product box */
+.pg-box { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: var(--on-light); border-radius: var(--radius-box); font-family: inherit; font-weight: 700; text-align: center; cursor: pointer; border: 0; padding: 0; flex: none; }
+.pg-box--phone { width: var(--container-phone); height: 76px; padding: 9px 2px 2px; font-size: 13px; line-height: 1.1; }
+.pg-box--desktop { width: var(--container-desktop); height: 110px; padding: 13px 4px 4px; font-size: 15px; line-height: 1.12; gap: 3px; }
+.pg-box--rose { background: var(--box-rose); box-shadow: inset 0 9px 0 var(--box-rose-flap); }
+.pg-box--teal { background: var(--box-teal); box-shadow: inset 0 9px 0 var(--box-teal-flap); }
+.pg-box--lilac { background: var(--box-lilac); box-shadow: inset 0 9px 0 var(--box-lilac-flap); }
+.pg-box--apple { background: var(--box-apple); box-shadow: inset 0 9px 0 var(--box-apple-flap); }
+.pg-box[aria-pressed="true"] { outline: 3px solid var(--ink); outline-offset: 0; }
+/* Found by search but not kept yet: a dashed ring, even while it is the selected box. */
+.pg-box--unsaved, .pg-box--unsaved[aria-pressed="true"] { outline: 3px dashed var(--ink); outline-offset: 0; }
+
+/* Ingredient jar */
+.pg-jar { padding: 0; display: flex; flex-direction: column; align-items: center; background: none; border: 0; color: var(--on-light); cursor: pointer; font-family: inherit; flex: none; }
+.pg-jar--phone { width: var(--container-phone); }
+.pg-jar--desktop { width: var(--container-desktop); }
+.pg-jar__lid { width: 62%; border-radius: 4px 4px 1px 1px; background: var(--brass); }
+.pg-jar--phone .pg-jar__lid { height: 11px; }
+.pg-jar--desktop .pg-jar__lid { height: 14px; }
+.pg-jar__glass { width: 100%; box-sizing: border-box; margin-top: 1px; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--ink-muted); }
+.pg-jar--phone .pg-jar__glass { height: 84px; padding: 0 3px; border-radius: 22px 22px 12px 12px; }
+.pg-jar--desktop .pg-jar__glass { height: 126px; padding: 0 5px; border-radius: var(--radius-jar) var(--radius-jar) 16px 16px; }
+.pg-jar[aria-pressed="true"] .pg-jar__glass { border: 2.5px solid var(--ink); }
+.pg-jar__label { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--label-paper); border-radius: 3px; font-weight: 700; text-align: center; overflow-wrap: anywhere; hyphens: manual; }
+.pg-jar--phone .pg-jar__label { padding: 3px 0; font-size: 13px; line-height: 1.08; }
+.pg-jar--desktop .pg-jar__label { padding: 8px 2px; font-size: 15px; line-height: 1.15; }
+
+/* Gus */
+.pg-gus { overflow: visible; display: block; }
+.pg-gus .pg-part { transform-box: fill-box; }
+.pg-gus .pg-m-hmm, .pg-gus .pg-m-open { display: none; }
+.pg-gus[data-mood="hmm"] .pg-m-smile, .pg-gus[data-mood="tasting"] .pg-m-smile { display: none; }
+.pg-gus[data-mood="hmm"] .pg-m-hmm, .pg-gus[data-mood="tasting"] .pg-m-open { display: inline; }
+@keyframes pg-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes pg-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px) rotate(-5deg); } 70% { transform: translateY(0); } 85% { transform: translateY(-3px); } }
+@keyframes pg-ponder { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-7deg); } 70% { transform: rotate(6deg); } }
+@keyframes pg-spoon { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-46deg); } }
+@keyframes pg-blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+.pg-gus[data-mood="idle"] { animation: pg-bob 2.4s ease-in-out 2; }
+.pg-gus[data-mood="happy"] { animation: pg-hop 0.7s ease 1; }
+.pg-gus[data-mood="hmm"] { animation: pg-ponder 1.3s ease-in-out 2; transform-origin: 50% 90%; }
+.pg-gus[data-mood="tasting"] .pg-spoon { animation: pg-spoon 0.75s ease-in-out 3; transform-origin: 50% 100%; }
+.pg-gus .pg-eyes { animation: pg-blink 3.2s linear 3; transform-origin: center; }
+
+/* Lamp */
+@keyframes pg-lampon { from { opacity: 0.35; } to { opacity: 1; } }
+.pg-glow { position: absolute; inset: 0; pointer-events: none; animation: pg-lampon 1.4s ease-out both; }
+
+/* Speech bubble */
+.pg-bubble { position: relative; background: var(--surface-raised); border: 1.5px solid var(--ink-muted); color: var(--ink); }
+.pg-bubble--phone { border-radius: 14px; padding: 9px 12px; }
+.pg-bubble--desktop { border-radius: var(--radius-bubble); padding: 18px 22px; }
+.pg-bubble__label { font-family: var(--font-body); font-weight: 700; }
+.pg-bubble--phone .pg-bubble__label { font-size: 14px; }
+.pg-bubble--desktop .pg-bubble__label { font-size: 16px; }
+.pg-bubble__text { margin: 2px 0 0; font-family: var(--font-voice); font-weight: 500; }
+.pg-bubble--phone .pg-bubble__text { font-size: 14.5px; line-height: 1.3; }
+.pg-bubble--desktop .pg-bubble__text { font-size: 21px; line-height: 1.36; margin-top: 4px; }
+.pg-bubble__tail { position: absolute; top: -9px; width: 15px; height: 15px; background: var(--surface-raised); border-left: 1.5px solid var(--ink-muted); border-top: 1.5px solid var(--ink-muted); transform: rotate(45deg); }
+.pg-bubble--desktop .pg-bubble__tail { top: -11px; width: 19px; height: 19px; }
+@keyframes pg-speak { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.pg-speak { animation: pg-speak 0.3s ease both; }
+.pg-walk { transition: left 0.55s cubic-bezier(0.3, 0.9, 0.3, 1); }
+
+/* Cupboard */
+.pg-cupboard { position: relative; background: var(--surface-cupboard); border: solid var(--wood); overflow-x: auto; overflow-y: hidden; }
+.pg-cupboard--phone { border-width: 8px; border-radius: 8px; }
+.pg-cupboard--desktop { border-width: var(--frame-cupboard); border-radius: var(--radius-cupboard); }
+.pg-shelf { position: relative; z-index: 1; box-sizing: border-box; display: flex; align-items: flex-end; }
+.pg-shelf__row { display: flex; align-items: flex-end; }
+.pg-board { position: absolute; left: 0; right: 0; box-sizing: border-box; background: var(--wood); border-top: 3px solid var(--wood-highlight); }
+
+/* Tab bar (phone) */
+.pg-tabs { display: flex; gap: var(--space-1); padding: 6px 8px calc(10px + env(safe-area-inset-bottom)); background: var(--surface-raised); }
+.pg-tab { flex: 1; min-height: 60px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 0; border-radius: var(--radius-control); font-family: inherit; font-size: 13px; font-weight: 700; line-height: 1.1; cursor: pointer; background: transparent; color: var(--ink); text-decoration: none; }
+.pg-tab[aria-current="page"] { background: var(--ink); color: var(--surface); }
+
+/* Menu item */
+.pg-menu { min-height: 56px; padding: 6px 13px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; text-align: left; cursor: pointer; width: 100%; box-sizing: border-box; font-family: inherit; }
+.pg-menu__title { font-weight: 700; font-size: 15px; line-height: 1.25; }
+.pg-menu__sub { font-size: 14px; font-weight: 600; }
+.pg-menu--product { border: 0; border-radius: var(--radius-box); color: var(--on-light); }
+.pg-menu--product.pg-menu--rose { background: var(--box-rose); }
+.pg-menu--product.pg-menu--teal { background: var(--box-teal); }
+.pg-menu--product.pg-menu--lilac { background: var(--box-lilac); }
+.pg-menu--product.pg-menu--apple { background: var(--box-apple); }
+.pg-menu--product[aria-pressed="true"] { outline: 3px solid var(--ink); outline-offset: 0; }
+.pg-menu--ingredient { border: 3px solid var(--fill-sage); border-radius: var(--radius-pill); background: var(--glass); color: var(--ink); }
+.pg-menu--ingredient .pg-menu__sub { color: var(--ink-muted); font-weight: 400; }
+
+/* Motion switch: <html data-motion="on|off"> is set by MotionProvider. With no attribute
+   (before hydration) the device's reduced-motion setting decides. */
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="on"]) *, html:not([data-motion="on"]) *::before, html:not([data-motion="on"]) *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
