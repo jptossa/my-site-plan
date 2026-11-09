@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Collapsible } from "@/components/Collapsible";
 import { Button } from "@/components/ds";
 import { MotionToggle } from "@/components/MotionToggle";
 import { DISCLAIMER } from "@/data/site";
@@ -47,14 +48,17 @@ export function SettingsView() {
         </div>
       </section>
 
-      <section className="settings-group" aria-labelledby="disclaimer-title">
-        <h2 id="disclaimer-title">Disclaimer</h2>
-        {DISCLAIMER.full.map((p) => (
-          <p key={p} className="muted">
-            {p}
-          </p>
-        ))}
-        <p className="app-note">Label data from Open Food Facts (open database, ODbL). [Draft wording: to be reviewed before launch.]</p>
+      <section className="settings-group">
+        <Collapsible title="Disclaimer">
+          <div className="stack">
+            {DISCLAIMER.full.map((p) => (
+              <p key={p} className="muted">
+                {p}
+              </p>
+            ))}
+            <p className="app-note">Label data from Open Food Facts (open database, ODbL). [Draft wording: to be reviewed before launch.]</p>
+          </div>
+        </Collapsible>
       </section>
     </div>
   );

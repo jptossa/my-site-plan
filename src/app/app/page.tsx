@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { AskGus } from "@/components/app/AskGus";
 import { EmptyIntro } from "@/components/app/EmptyIntro";
-import { SearchForm } from "@/components/app/SearchForm";
 
 // The URL's ?q= / ?code= are read on the server (they're runtime data), so the right screen
 // streams in as HTML instead of waiting for JavaScript to hydrate. Until they resolve, the
@@ -10,7 +9,6 @@ function AskGusShell() {
   return (
     <div className="stack">
       <h1 className="app-title">Ask Gus</h1>
-      <SearchForm className="app-search--phone" />
       <EmptyIntro />
     </div>
   );

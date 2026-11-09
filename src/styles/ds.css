@@ -6,10 +6,21 @@
 .pg-press:active { transform: translateY(2px); }
 
 /* Button */
-.pg-btn { min-height: var(--touch-min); padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); border-radius: var(--radius-control); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; border: 0; text-decoration: none; }
-.pg-btn--primary { background: var(--amber); color: var(--on-light); }
-.pg-btn--secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--ink-muted); font-weight: 600; }
-.pg-btn--inverse { background: var(--ink); color: var(--surface); }
+/* Every button has a 2px border (transparent when it needs none) so state changes never shift
+   the layout. Pressing a button, or leaving it toggled on, changes its text color and border:
+   - primary:   amber fill + dark text  ->  dark fill + amber text + amber border
+   - secondary: cream text + grey border ->  amber text + amber border + a faint amber wash
+   - inverse:   cream fill + dark text   ->  dark fill + cream text + cream border
+   All pairs keep at least 4.5:1 contrast. */
+.pg-btn { min-height: var(--touch-min); padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); border-radius: var(--radius-control); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; border: 2px solid transparent; text-decoration: none; transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.14s ease; }
+.pg-btn--primary { background: var(--amber); color: var(--on-light); border-color: var(--amber); }
+.pg-btn--primary:hover { border-color: var(--ink); }
+.pg-btn--primary:active, .pg-btn--primary[aria-pressed="true"] { background: var(--surface-raised); color: var(--amber); border-color: var(--amber); }
+.pg-btn--secondary { background: transparent; color: var(--ink); border-color: var(--ink-muted); font-weight: 600; }
+.pg-btn--secondary:hover { border-color: var(--ink); }
+.pg-btn--secondary:active, .pg-btn--secondary[aria-pressed="true"] { color: var(--amber); border-color: var(--amber); background: rgba(244, 178, 74, 0.16); }
+.pg-btn--inverse { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.pg-btn--inverse:active { background: var(--surface); color: var(--ink); border-color: var(--ink); }
 .pg-btn--pill { border-radius: var(--radius-pill); }
 .pg-btn--lg { font-size: 17px; padding: 0 24px; min-height: 52px; }
 .pg-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -70,14 +81,14 @@
 
 /* Speech bubble */
 .pg-bubble { position: relative; background: var(--surface-raised); border: 1.5px solid var(--ink-muted); color: var(--ink); }
-.pg-bubble--phone { border-radius: 14px; padding: 9px 12px; }
+.pg-bubble--phone { border-radius: 14px; padding: 14px 16px; }
 .pg-bubble--desktop { border-radius: var(--radius-bubble); padding: 18px 22px; }
 .pg-bubble__label { font-family: var(--font-body); font-weight: 700; }
 .pg-bubble--phone .pg-bubble__label { font-size: 14px; }
 .pg-bubble--desktop .pg-bubble__label { font-size: 16px; }
-.pg-bubble__text { margin: 2px 0 0; font-family: var(--font-voice); font-weight: 500; }
-.pg-bubble--phone .pg-bubble__text { font-size: 14.5px; line-height: 1.3; }
-.pg-bubble--desktop .pg-bubble__text { font-size: 21px; line-height: 1.36; margin-top: 4px; }
+.pg-bubble__text { margin: 4px 0 0; font-family: var(--font-voice); font-weight: 500; }
+.pg-bubble--phone .pg-bubble__text { font-size: 16px; line-height: 1.5; }
+.pg-bubble--desktop .pg-bubble__text { font-size: 21px; line-height: 1.5; margin-top: 8px; }
 .pg-bubble__tail { position: absolute; top: -9px; width: 15px; height: 15px; background: var(--surface-raised); border-left: 1.5px solid var(--ink-muted); border-top: 1.5px solid var(--ink-muted); transform: rotate(45deg); }
 .pg-bubble--desktop .pg-bubble__tail { top: -11px; width: 19px; height: 19px; }
 @keyframes pg-speak { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -94,8 +105,13 @@
 
 /* Tab bar (phone) */
 .pg-tabs { display: flex; gap: var(--space-1); padding: 6px 8px calc(10px + env(safe-area-inset-bottom)); background: var(--surface-raised); }
-.pg-tab { flex: 1; min-height: 60px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 0; border-radius: var(--radius-control); font-family: inherit; font-size: 13px; font-weight: 700; line-height: 1.1; cursor: pointer; background: transparent; color: var(--ink); text-decoration: none; }
-.pg-tab[aria-current="page"] { background: var(--ink); color: var(--surface); }
+/* Icon-only tabs: the name is in visually-hidden text, so screen readers still hear it. */
+.pg-tab { flex: 1; min-height: 56px; padding: 5px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid transparent; border-radius: var(--radius-control); font-family: inherit; cursor: pointer; background: transparent; color: var(--ink); text-decoration: none; transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.14s ease; }
+.pg-tab svg { width: 28px; height: 28px; }
+.pg-tab:hover { border-color: var(--ink-muted); }
+.pg-tab:active { color: var(--amber); border-color: var(--amber); }
+.pg-tab[aria-current="page"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.pg-tab[aria-current="page"]:active { background: var(--surface-raised); color: var(--amber); border-color: var(--amber); }
 
 /* Menu item */
 .pg-menu { min-height: 56px; padding: 6px 13px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; text-align: left; cursor: pointer; width: 100%; box-sizing: border-box; font-family: inherit; }
@@ -116,3 +132,19 @@ html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="on"]) *, html:not([data-motion="on"]) *::before, html:not([data-motion="on"]) *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Stacked pantry (phone held upright): the jars stand in a vertical list */
+.pg-walk-y { position: absolute; left: 8px; z-index: 1; transition: top 0.55s cubic-bezier(0.3, 0.9, 0.3, 1); }
+.pg-stack { overflow: hidden; }
+.pg-stack__products { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: var(--space-3); padding: 36px var(--space-4) 20px; }
+.pg-stack__jars { position: relative; z-index: 1; padding: var(--space-4) var(--space-4) var(--space-4) 62px; }
+.pg-stack__list { display: grid; margin: 0; padding: 0; list-style: none; }
+.pg-sjar { width: 100%; display: flex; align-items: center; gap: var(--space-4); padding: 0 var(--space-4) 0 var(--space-3); background: var(--glass); border: 3px solid var(--fill-sage); border-radius: var(--radius-pill); color: var(--ink); font-family: inherit; text-align: left; cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.14s ease; }
+.pg-sjar[aria-pressed="true"] { box-shadow: 0 0 0 2.5px var(--ink); background: rgba(247, 240, 218, 0.22); }
+.pg-sjar:active { background: rgba(244, 178, 74, 0.2); }
+.pg-sjar__glyph { flex: none; width: 30px; display: flex; flex-direction: column; align-items: center; }
+.pg-sjar__lid { width: 62%; height: 7px; border-radius: 3px 3px 1px 1px; background: var(--brass); }
+.pg-sjar__glass { width: 100%; height: 28px; margin-top: 1px; border: 1.5px solid var(--ink-muted); border-radius: 12px 12px 6px 6px; }
+.pg-sjar__text { display: grid; gap: 4px; min-width: 0; }
+.pg-sjar__name { font-weight: 700; font-size: 16px; line-height: 1.2; overflow-wrap: anywhere; }
+.pg-sjar__status { font-size: 14px; font-weight: 600; line-height: 1.2; }

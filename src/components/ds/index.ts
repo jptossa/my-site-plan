@@ -11,3 +11,4 @@ export { TabBar } from "./TabBar";
 export type { TabId } from "./TabBar";
 export { MenuItem } from "./MenuItem";
 export * from "./types";
+export { PantryStack } from "./PantryStack";

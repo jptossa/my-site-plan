@@ -41,7 +41,8 @@
   /* Type families (the --font-* source variables come from next/font in layout.tsx) */
   --font-display: var(--font-gloock), Georgia, serif;
   --font-body: var(--font-figtree), "Segoe UI", system-ui, sans-serif;
-  --font-voice: var(--font-grandstander), "Trebuchet MS", sans-serif;
+  /* Gus's voice: Fredoka (a deliberate change from the design system's Grandstander). */
+  --font-voice: var(--font-fredoka), "Trebuchet MS", sans-serif;
 
   /* Spacing */
   --space-1: 4px;

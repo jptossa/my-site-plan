@@ -7,20 +7,22 @@ import {
   Button,
   Cupboard,
   Gus,
+  PantryStack,
   StatusIcon,
   StatusLabel,
   type CupboardIngredient,
   type CupboardProduct,
 } from "@/components/ds";
+import { Collapsible } from "@/components/Collapsible";
+import { ProductSkeleton, ResultsSkeleton } from "@/components/Skeleton";
 import { RULES_BY_ID } from "@/data/eu-rules";
 import { DISCLAIMER } from "@/data/site";
 import { explain, VERDICT_WORDS } from "@/lib/analyze";
 import type { ProductDetail, ProductSummary } from "@/lib/off";
 import { colorForIndex, usePantry } from "@/lib/pantry";
 import { useFetchJson } from "@/lib/useFetchJson";
-import { useIsDesktop } from "@/lib/useIsDesktop";
+import { usePantryLayout } from "@/lib/useLayout";
 import { EmptyIntro } from "./EmptyIntro";
-import { SearchForm } from "./SearchForm";
 
 const READING = "Reading the label… one sec, this spoon is busy.";
 /** A product name short enough for a box label: two words at most. */
@@ -67,7 +69,16 @@ function EmptyState() {
 function Results({ q }: { q: string }) {
   const router = useRouter();
   const { data, error, loading, reload } = useFetchJson<{ results: ProductSummary[] }>(`/api/search?q=${encodeURIComponent(q)}`);
-  if (loading) return <GusSays mood="tasting">{READING}</GusSays>;
+  if (loading) {
+    return (
+      <div className="stack">
+        <p className="app-note" aria-hidden="true">
+          {READING}
+        </p>
+        <ResultsSkeleton />
+      </div>
+    );
+  }
   if (error) return <GusSays mood="hmm" onRetry={reload}>I couldn&rsquo;t reach the label library just now. Give it another try in a moment.</GusSays>;
   const results = data?.results ?? [];
   if (results.length === 0) {
@@ -97,13 +108,23 @@ function Results({ q }: { q: string }) {
 
 function ProductView({ code, q }: { code: string; q: string }) {
   const router = useRouter();
-  const isDesktop = useIsDesktop();
-  const size = isDesktop ? "desktop" : "phone";
+  const layout = usePantryLayout();
+  const size = layout === "desktop" ? "desktop" : "phone";
   const { pantry, saveProduct, removeProduct, toggleWatch } = usePantry();
   const { data, error, loading, reload } = useFetchJson<{ product: ProductDetail; alternatives: ProductSummary[] }>(`/api/product/${code}`);
   const [pick, setPick] = useState<{ code: string; id: string } | null>(null);
 
-  if (loading) return <GusSays heading mood="tasting">{READING}</GusSays>;
+  if (loading) {
+    return (
+      <div className="stack">
+        <h1 className="app-title">Ask Gus</h1>
+        <p className="app-note" aria-hidden="true">
+          {READING}
+        </p>
+        <ProductSkeleton />
+      </div>
+    );
+  }
   if (error === "not-found") {
     return <GusSays heading mood="hmm">{"I couldn't find a readable label for that one. Try searching by name."}</GusSays>;
   }
@@ -174,16 +195,29 @@ function ProductView({ code, q }: { code: string; q: string }) {
         </div>
       ) : null}
 
-      <Cupboard
-        size={size}
-        products={shelf}
-        ingredients={ingredients}
-        selectedProduct={product.code}
-        onProductChange={(id) => router.push(`/app?${q ? `q=${encodeURIComponent(q)}&` : ""}code=${id}`)}
-        selectedIngredient={pickedId}
-        onIngredientChange={(id) => setPick({ code, id })}
-        bubbleFooter={<p className="app-note">{DISCLAIMER.inApp}</p>}
-      />
+      {/* Upright phone: jars stack as a list. Wide (landscape or desktop): the regular cupboard. */}
+      {layout === "stack" ? (
+        <PantryStack
+          products={shelf}
+          ingredients={ingredients}
+          selectedProduct={product.code}
+          onProductChange={(id) => router.push(`/app?${q ? `q=${encodeURIComponent(q)}&` : ""}code=${id}`)}
+          selectedIngredient={pickedId}
+          onIngredientChange={(id) => setPick({ code, id })}
+          bubbleFooter={<p className="app-note">{DISCLAIMER.inApp}</p>}
+        />
+      ) : (
+        <Cupboard
+          size={size}
+          products={shelf}
+          ingredients={ingredients}
+          selectedProduct={product.code}
+          onProductChange={(id) => router.push(`/app?${q ? `q=${encodeURIComponent(q)}&` : ""}code=${id}`)}
+          selectedIngredient={pickedId}
+          onIngredientChange={(id) => setPick({ code, id })}
+          bubbleFooter={<p className="app-note">{DISCLAIMER.inApp}</p>}
+        />
+      )}
 
       <div className="app-actions">
         <Button
@@ -228,15 +262,12 @@ function ProductView({ code, q }: { code: string; q: string }) {
         </section>
       ) : null}
 
-      <details>
-        <summary style={{ cursor: "pointer", minHeight: 44, display: "flex", alignItems: "center", fontWeight: 700 }}>The label, as we read it</summary>
-        <p className="muted" style={{ marginTop: "var(--space-3)" }}>
-          {product.ingredientsText || "No ingredient list."}
-        </p>
+      <Collapsible title="The label, as we read it">
+        <p className="muted">{product.ingredientsText || "No ingredient list."}</p>
         <p className="app-note" style={{ marginTop: "var(--space-3)" }}>
           Label data from Open Food Facts, a community database. It can be incomplete or out of date.
         </p>
-      </details>
+      </Collapsible>
     </div>
   );
 }
@@ -248,7 +279,6 @@ export function AskGus({ q, code }: { q: string; code: string | null }) {
   return (
     <div className="stack">
       <h1 className="app-title">Ask Gus</h1>
-      <SearchForm className="app-search--phone" defaultValue={q} />
       {q.length >= 2 ? <Results key={q} q={q} /> : <EmptyState />}
     </div>
   );
