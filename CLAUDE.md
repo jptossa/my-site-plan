@@ -22,13 +22,15 @@ npm run icons        # regenerate apple-icon.png, favicon.ico, public/icon-*.png
 
 ## Next.js version warning
 
-This is Next.js 16 with `cacheComponents` and `partialPrefetching` on (see `next.config.ts`). It differs from older versions: read the relevant guide in `node_modules/next/dist/docs/` before writing Next code (see AGENTS.md). Consequences already in the code: `useSearchParams` pages are wrapped in `<Suspense>` (`src/app/app/page.tsx`), `use cache` + `cacheLife` is used inside functions in `src/lib/off.ts` (not directly in route handler bodies), and server components must not call `Date.now()`/`Math.random()`.
+This is Next.js 16 with `cacheComponents` and `partialPrefetching` on (see `next.config.ts`). It differs from older versions: read the relevant guide in `node_modules/next/dist/docs/` before writing Next code (see AGENTS.md). Consequences already in the code: `src/app/app/page.tsx` reads `searchParams` on the server inside `<Suspense>` (empty Ask Gus screen is the static fallback), client pieces that use `useSearchParams` (`AppSearch`) are also wrapped in `<Suspense>`, `use cache` + `cacheLife` is used inside functions in `src/lib/off.ts` (not directly in route handler bodies), and server components must not call `Date.now()`/`Math.random()`.
 
 ## Architecture
 
-**Two layers, one app.** Route group `src/app/(site)/` holds the public marketing pages (Home, How It Works, Top Warnings, About Us) with header/footer. `src/app/app/` is the app shell ("Track the Poison"): Ask Gus (`/app`), My Pantry, Profile, Settings. `AppShell` shows a bottom `TabBar` below 900px and a left menu from 900px up. The app pages are client components reading URL params (`?q=` search, `?code=` selected product barcode).
+**Two layers, one app.** Route group `src/app/(site)/` holds the public marketing pages (Home, How It Works, Top Warnings, About Us) with header/footer. `src/app/app/` is the app shell ("Track the Poison"): Ask Gus (`/app`), My Pantry, Profile, Settings. `AppShell` shows a bottom icon-only `TabBar` (labels are visually hidden, not removed) below 900px and a left menu from 900px up. Both layers use the `SiteMenu` hamburger dropdown for the site links plus Settings. Search is one long `SearchBar` (magnifier submit button, `next/form` GET to `/app?q=`). URL params are `?q=` search and `?code=` selected product barcode.
 
-**Design system port.** The design system lives in a Claude artifact (`https://claude.ai/artifact/5vKwf1t4ySnTwKZqQJfCUD`, a React/`window.Pregustator` bundle) and is ported by hand to `src/components/ds/*.tsx`, `src/styles/tokens.css` (from its `tokens.json`) and `src/styles/ds.css` (from its `bundle.css`). Component props mirror its `index.d.ts`. When changing look and feel, change it in the design system first, then re-port. `Cupboard` is the Ask Gus scene: geometry (jar width, Gus position, bubble tail) is computed in JS per `size` (`phone`/`desktop`), picked with `useIsDesktop` (phone-first on the server).
+**Design system port.** The design system lives in a Claude artifact (`https://claude.ai/artifact/5vKwf1t4ySnTwKZqQJfCUD`, a React/`window.Pregustator` bundle) and is ported by hand to `src/components/ds/*.tsx`, `src/styles/tokens.css` (from its `tokens.json`) and `src/styles/ds.css` (from its `bundle.css`). Component props mirror its `index.d.ts`. When changing look and feel, change it in the design system first, then re-port. `Cupboard` is the wide Ask Gus scene: geometry (jar width, Gus position, bubble tail) is computed in JS per `size` (`phone`/`desktop`). `usePantryLayout()` (`src/lib/useLayout.ts`) picks the scene: `stack` (portrait or <900px: `PantryStack`, ingredient jars as a vertical list with Gus walking down it), `phone` (landscape <900px) or `desktop` (>=900px), both `Cupboard`; the server renders `stack`.
+
+**Deliberate deviations from the design system (UI refresh).** Gus's voice font is Fredoka, not Grandstander (`--font-voice`); app tabs are icon-only; the Motion toggle lives only on the Settings page (no header button); site nav is a hamburger; wordy sections use `Collapsible`/`Disclosure` (arrow toggles); search loading uses a shimmer skeleton (`Skeleton.tsx`, stops with Motion off); pressed/active buttons swap to amber text + border. Update the design system artifact to match if it should stay the source of truth.
 
 **Data pipeline (search to verdict).**
 1. `src/lib/off.ts` (Open Food Facts, server only): `search.openfoodfacts.org` returns only codes/names, so each hit's label is fetched individually in parallel from the v2 product API; products without a readable ingredient list are dropped (no verdict possible). Alternatives come from the product's most specific category. All of it is cached for hours with `use cache`. OFF's old `cgi/search.pl` and comma-separated `code=` filters are unreliable, don't use them.
@@ -42,11 +44,11 @@ This is Next.js 16 with `cacheComponents` and `partialPrefetching` on (see `next
 
 - Only three verdict phrases: **Doesn't meet EU standards**, **EU limit applies** (or **EU warning label required**), **Meets EU standards**. Never "unsafe", "toxic", "dangerous", "banned in Europe". The app compares rules; it does not judge safety.
 - Products are square boxes, ingredients are round jars; product box colors (rose, teal, lilac, apple) never mean a verdict. Status is always icon + words + color.
-- Single dark "Moss" theme, no emoji, no drop shadows, nothing that loops or flashes; every screen has a Motion control.
+- Single dark "Moss" theme, no emoji, no drop shadows, nothing flashes; the only loop is the loading shimmer, which stops with Motion off; the Motion control is in Settings.
 - Nav names: My Pantry, Ask Gus, Profile, Settings (app); How It Works, Track the Poison, Top Warnings, About Us (site).
 
 ## Gotchas
 
 - `design-brief.md`, `polish-log.md` and `example-prompts.md` are a leftover coffee-shop template (light theme, Nunito, café photos). Ignore them; `site-plan.md` is the page plan and `references/references.md` the inspiration sites.
 - All contact details, social links, the site URL and the OFF User-Agent in `src/data/site.ts` are placeholders (`.example` domain, 555-01xx phone). The disclaimer copy there is a draft that needs review before launch.
-- Not a git repository yet.
+- Git: `main` is on https://github.com/jptossa/my-site-plan (public). UI-refresh work lives on branch `ui-refresh`.

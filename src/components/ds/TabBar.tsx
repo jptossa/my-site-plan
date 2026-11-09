@@ -29,10 +29,11 @@ function TabIcon({ id }: { id: TabId }) {
     );
   }
   if (id === "ask") {
+    // Magnifying glass: a big round lens and a thick handle, so it can't be mistaken for a pin.
     return (
-      <svg {...a}>
-        <ellipse cx={12} cy={7} rx={4.5} ry={5} />
-        <path d="M12 12v10" />
+      <svg {...a} strokeWidth={2.4}>
+        <circle cx={10.5} cy={10.5} r={6.5} />
+        <path d="M15.4 15.4L21 21" />
       </svg>
     );
   }
@@ -53,14 +54,14 @@ function TabIcon({ id }: { id: TabId }) {
   );
 }
 
-/** Phone bottom navigation: always four tabs, in this order. */
+/** Phone bottom navigation: always four tabs, in this order. Icons only; names are visually hidden. */
 export function TabBar({ active }: { active: TabId }) {
   return (
     <nav aria-label="Main" className="pg-tabs">
       {TABS.map((t) => (
-        <Link key={t.id} href={t.href} className="pg-tab pg-press" aria-current={t.id === active ? "page" : undefined}>
+        <Link key={t.id} href={t.href} className="pg-tab pg-press" aria-current={t.id === active ? "page" : undefined} title={t.label}>
           <TabIcon id={t.id} />
-          {t.label}
+          <span className="visually-hidden">{t.label}</span>
         </Link>
       ))}
     </nav>

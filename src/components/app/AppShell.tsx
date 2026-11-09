@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { MenuItem, TabBar, type TabId } from "@/components/ds";
-import { MotionToggle } from "@/components/MotionToggle";
+import { SearchBar } from "@/components/SearchBar";
 import { Logo } from "@/components/site/Logo";
+import { SiteMenu } from "@/components/site/SiteMenu";
 import { RULES_BY_ID } from "@/data/eu-rules";
 import { usePantry } from "@/lib/pantry";
 import { VERDICT_WORDS } from "@/lib/analyze";
-import { SearchForm } from "./SearchForm";
+import { AppSearch } from "./AppSearch";
 
 function activeTab(pathname: string): TabId {
   if (pathname.startsWith("/app/pantry")) return "pantry";
@@ -18,7 +19,11 @@ function activeTab(pathname: string): TabId {
   return "ask";
 }
 
-/** Phone: top bar + bottom TabBar. Desktop (900px+): left menu with search, My Pantry, Ingredients. */
+/**
+ * Phone: top bar (logo + hamburger) and an icon-only bottom TabBar.
+ * Desktop (900px+): left menu with My Pantry and Ingredients. Both get one long search bar on top.
+ * Motion lives in Settings only.
+ */
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -33,7 +38,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-shell">
       <aside className="app-side" aria-label="Pantry menu">
         <Logo />
-        <SearchForm className="app-side__search" />
         <div className="app-side__group">
           <h2>My Pantry</h2>
           {pantry.products.length === 0 ? (
@@ -70,7 +74,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link href="/app/settings" className="pg-btn pg-btn--secondary pg-press" aria-current={pathname.startsWith("/app/settings") ? "page" : undefined}>
             Settings
           </Link>
-          <MotionToggle />
           <Link href="/" className="app-note">
             Back to the Pregustator site
           </Link>
@@ -79,10 +82,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <header className="app-top">
         <Logo />
-        <MotionToggle />
+        <SiteMenu />
       </header>
 
       <main id="main" className="app-main">
+        <Suspense fallback={<SearchBar />}>
+          <AppSearch />
+        </Suspense>
         {children}
       </main>
 

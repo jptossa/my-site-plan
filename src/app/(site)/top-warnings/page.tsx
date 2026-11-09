@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Disclosure } from "@/components/Collapsible";
 import { Button, IngredientJar, StatusLabel } from "@/components/ds";
 import { WatchButton } from "@/components/WatchButton";
 import { RULES } from "@/data/eu-rules";
@@ -33,20 +34,22 @@ export default function TopWarningsPage() {
               <div className="warning__body">
                 <h3>{rule.name}</h3>
                 <StatusLabel kind={rule.status}>{rule.statusText}</StatusLabel>
-                <p>
-                  {rule.whatItDoes} {rule.euRule} {rule.usRule}
-                </p>
-                <p className="rule-source muted">
-                  Sources:{" "}
-                  <a href={rule.sources.eu.url} target="_blank" rel="noreferrer">
-                    {rule.sources.eu.label}
-                  </a>
-                  ;{" "}
-                  <a href={rule.sources.us.url} target="_blank" rel="noreferrer">
-                    {rule.sources.us.label}
-                  </a>
-                  .
-                </p>
+                <Disclosure>
+                  <p>
+                    {rule.whatItDoes} {rule.euRule} {rule.usRule}
+                  </p>
+                  <p className="rule-source muted">
+                    Sources:{" "}
+                    <a href={rule.sources.eu.url} target="_blank" rel="noreferrer">
+                      {rule.sources.eu.label}
+                    </a>
+                    ;{" "}
+                    <a href={rule.sources.us.url} target="_blank" rel="noreferrer">
+                      {rule.sources.us.label}
+                    </a>
+                    .
+                  </p>
+                </Disclosure>
                 <WatchButton ruleId={rule.id} name={rule.name} />
               </div>
             </li>

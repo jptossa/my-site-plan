@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Collapsible } from "@/components/Collapsible";
 import { Button } from "@/components/ds";
 import { DISCLAIMER } from "@/data/site";
 
@@ -13,62 +14,61 @@ export default function HowItWorksPage() {
     <div className="container">
       <div className="page-head rise">
         <h1>How It Works</h1>
-        <p>Pregustator lines up the label on a US food product against EU food rules, one ingredient at a time.</p>
+        <p>Pregustator lines up the label on a US food product against EU food rules, one ingredient at a time. Tap an arrow to open a section.</p>
       </div>
 
-      <section className="section" aria-labelledby="methodology">
-        <div className="prose">
-          <h2 id="methodology">Methodology</h2>
-          <ol>
-            <li>
-              <strong>You search.</strong> Pick a US food product. We look up its label in Open Food Facts, a community-built database of food products.
-            </li>
-            <li>
-              <strong>We read the ingredients.</strong> We match each ingredient and additive on the label to a short list of ingredients where US and EU rules differ.
-            </li>
-            <li>
-              <strong>Gus explains.</strong> For each match he says what the ingredient does in the food, what the EU rule is, and what the US rule is.
-            </li>
-            <li>
-              <strong>The product gets one verdict.</strong> It takes the strictest result of its ingredients.
-            </li>
-          </ol>
-        </div>
-      </section>
+      <div className="section">
+        <Collapsible title="Methodology" defaultOpen>
+          <div className="prose">
+            <ol>
+              <li>
+                <strong>You search.</strong> Pick a US food product. We look up its label in Open Food Facts, a community-built database of food products.
+              </li>
+              <li>
+                <strong>We read the ingredients.</strong> We match each ingredient and additive on the label to a short list of ingredients where US and EU rules differ.
+              </li>
+              <li>
+                <strong>Gus explains.</strong> For each match he says what the ingredient does in the food, what the EU rule is, and what the US rule is.
+              </li>
+              <li>
+                <strong>The product gets one verdict.</strong> It takes the strictest result of its ingredients.
+              </li>
+            </ol>
+          </div>
+        </Collapsible>
 
-      <section className="section" aria-labelledby="differences">
-        <div className="prose">
-          <h2 id="differences">Where the rules differ</h2>
-          <p>Gus uses exactly three phrases, so a result always means the same thing.</p>
-        </div>
-        <div className="compare" style={{ marginTop: "var(--space-5)" }}>
-          <div className="compare__row">
-            <strong>Doesn&rsquo;t meet EU standards</strong>
-            <span>The EU does not allow this ingredient in food.</span>
-            <span>Example: titanium dioxide (E171).</span>
+        <Collapsible title="Where the rules differ">
+          <div className="prose">
+            <p>Gus uses exactly three phrases, so a result always means the same thing.</p>
           </div>
-          <div className="compare__row">
-            <strong>EU limit applies / EU warning label required</strong>
-            <span>The EU allows it, with a maximum amount or a warning on the package.</span>
-            <span>Example: Red 40 (E129) needs a warning label.</span>
+          <div className="compare" style={{ marginTop: "var(--space-5)" }}>
+            <div className="compare__row">
+              <strong>Doesn&rsquo;t meet EU standards</strong>
+              <span>The EU does not allow this ingredient in food.</span>
+              <span>Example: titanium dioxide (E171).</span>
+            </div>
+            <div className="compare__row">
+              <strong>EU limit applies / EU warning label required</strong>
+              <span>The EU allows it, with a maximum amount or a warning on the package.</span>
+              <span>Example: Red 40 (E129) needs a warning label.</span>
+            </div>
+            <div className="compare__row">
+              <strong>Meets EU standards</strong>
+              <span>We found no EU issue with this ingredient.</span>
+              <span>Most ingredients land here.</span>
+            </div>
           </div>
-          <div className="compare__row">
-            <strong>Meets EU standards</strong>
-            <span>We found no EU issue with this ingredient.</span>
-            <span>Most ingredients land here.</span>
-          </div>
-        </div>
-      </section>
+        </Collapsible>
 
-      <section className="section" id="disclaimer" aria-labelledby="does-and-doesnt">
-        <div className="prose">
-          <h2 id="does-and-doesnt">What Pregustator does and doesn&rsquo;t do</h2>
-          {DISCLAIMER.full.map((para) => (
-            <p key={para}>{para}</p>
-          ))}
-          <p className="app-note">[Draft wording: to be reviewed before launch.]</p>
-        </div>
-      </section>
+        <Collapsible id="disclaimer" title="What Pregustator does and doesn't do">
+          <div className="prose">
+            {DISCLAIMER.full.map((para) => (
+              <p key={para}>{para}</p>
+            ))}
+            <p className="app-note">[Draft wording: to be reviewed before launch.]</p>
+          </div>
+        </Collapsible>
+      </div>
 
       <section className="section">
         <div className="callout">

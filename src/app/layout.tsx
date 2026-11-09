@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Gloock, Grandstander } from "next/font/google";
+import { Figtree, Fredoka, Gloock } from "next/font/google";
 import { MotionProvider } from "@/components/MotionProvider";
 import { SITE } from "@/data/site";
 import "@/styles/tokens.css";
@@ -8,7 +8,9 @@ import "./globals.css";
 
 const gloock = Gloock({ weight: "400", subsets: ["latin"], variable: "--font-gloock", display: "swap" });
 const figtree = Figtree({ weight: ["400", "600", "700"], subsets: ["latin"], variable: "--font-figtree", display: "swap" });
-const grandstander = Grandstander({ weight: ["500"], subsets: ["latin"], variable: "--font-grandstander", display: "swap" });
+// Gus's voice. Fredoka is rounded and friendly but has regular letter shapes, so it reads
+// more consistently than the design system's original Grandstander.
+const fredoka = Fredoka({ weight: ["400", "500"], subsets: ["latin"], variable: "--font-fredoka", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -31,7 +33,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${gloock.variable} ${figtree.variable} ${grandstander.variable}`}>
+    <html lang="en" className={`${gloock.variable} ${figtree.variable} ${fredoka.variable}`}>
       <body>
         <a className="skip-link" href="#main">
           Skip to content
